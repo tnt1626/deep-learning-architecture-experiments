@@ -20,9 +20,10 @@ stages:
       - base
       - improvements
     outs:
+      - logs/training_log.csv
       - models/model.pth
     plots:
-      - training_logs.csv:
+      - logs/training_logs.csv:
           x: epoch
 
   evaluate:
