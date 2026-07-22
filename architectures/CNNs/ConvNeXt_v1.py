@@ -18,7 +18,6 @@ class StemBlock(nn.Module):
         return x
 
 
-# TODO: ConvNeXt block
 class ConvNeXtBlock(nn.Module):
     def __init__(self, dim: int, drop_patch: float = 0., layer_scale_init_value: float = 1e-6):
         super().__init__()
@@ -61,3 +60,14 @@ class DownsamplingLayer(nn.Module):
         return x
 
     
+class GlobalAveragePoolingHead(nn.Module):
+    def __init__(self, in_channels: int, num_classes: int):
+        super().__init__()
+        self.norm = nn.LayerNorm(in_channels)
+        self.head = nn.Linear(in_channels, num_classes)
+
+    def forward(self, x: torch.Tensor):
+        x = x.mean([-2, -1])
+        x = self.norm(x)
+        x = self.head(x)
+        return x
