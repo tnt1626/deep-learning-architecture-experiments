@@ -1,8 +1,9 @@
 import yaml
-import torch
 import torch.nn as nn
 
-with open("params.yaml", "r") as f:
+from config import PARAMS
+
+with open(PARAMS, "r") as f:
     params = yaml.safe_load(f)
 
 class PinteeCNN(nn.Module):

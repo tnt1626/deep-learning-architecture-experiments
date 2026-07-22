@@ -1,25 +1,26 @@
 import json
 import torch
 import yaml
-from torch.utils.data import DataLoader
 import torchvision
 from model import PinteeCNN
+from torch.utils.data import DataLoader
+from config import METRICS, MODEL, PARAMS, TEST_DATA
 
 torch.serialization.add_safe_globals([torchvision.datasets.cifar.CIFAR10])
 
-with open("params.yaml", "r") as f:
+with open(PARAMS, "r") as f:
     params = yaml.safe_load(f)
 
 def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     # Load test dataset
-    test_dataset = torch.load("./data/processed/test.pt", weights_only=False, map_location=device)
+    test_dataset = torch.load(TEST_DATA, weights_only=False, map_location=device)
     test_loader = DataLoader(test_dataset, batch_size=params['base']['batch_size'], shuffle=False)
 
     # Load trained model 
     model = PinteeCNN().to(device)
-    model.load_state_dict(torch.load("models/model.pth"))
+    model.load_state_dict(torch.load(MODEL))
     model.eval() # Convert into evaluate mode
 
     criterion = torch.nn.CrossEntropyLoss()
@@ -47,7 +48,7 @@ def main():
         "accuracy": final_acc
     }
 
-    with open("metrics.json", "w") as f:
+    with open(METRICS, "w") as f:
         json.dump(metrics, f, indent=4)
 
     print(f"-> Evaluation Completed. Acc: {final_acc:.4f}, Loss: {final_loss:.4f}")

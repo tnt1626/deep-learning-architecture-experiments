@@ -1,19 +1,27 @@
 from torchvision.datasets import CIFAR10
 from torch.utils.data import DataLoader
 from torchvision.transforms import transforms
+from typing import Tuple
+from src.config import (
+    PARAMS, 
+    RAW_DATA, 
+    PROCESSED_DATA,
+    TRAIN_DATA,
+    TEST_DATA
+)
 import torch
 import yaml
 import os
-from typing import Tuple
+
 
 # Load params from params.yaml
-with open("params.yaml", "r") as f:
+with open(PARAMS, "r") as f:
     params = yaml.safe_load(f)
 
 def compute_mean_std() -> Tuple[torch.Tensor, torch.Tensor]:
     # Load dataset with only the ToTensor transform to compute mean and std
     compute_transform = transforms.Compose([transforms.ToTensor()])
-    train_dataset = CIFAR10("./data/raw", train=True, transform=compute_transform, download=True)
+    train_dataset = CIFAR10(RAW_DATA, train=True, transform=compute_transform, download=True)
     loader = DataLoader(train_dataset, batch_size=1024, shuffle=False, num_workers=4)
 
     mean = 0.0
@@ -43,7 +51,7 @@ def compute_mean_std() -> Tuple[torch.Tensor, torch.Tensor]:
 
 def main():
     # create processed folder if not exist
-    os.makedirs("data/processed", exist_ok=True)
+    os.makedirs(PROCESSED_DATA, exist_ok=True)
 
     # process z-score
     use_z_score = params['improvements']['use_z_score']
@@ -63,13 +71,13 @@ def main():
 
     compute_transform = transforms.Compose(transform_lst)
 
-    train_dataset = CIFAR10("./data/raw", train=True, transform=compute_transform, download=True)
-    test_dataset = CIFAR10("./data/raw", train=False, transform=compute_transform, download=True)
+    train_dataset = CIFAR10(RAW_DATA, train=True, transform=compute_transform, download=True)
+    test_dataset = CIFAR10(RAW_DATA, train=False, transform=compute_transform, download=True)
 
     # Save processed data
-    torch.save(train_dataset, "./data/processed/train.pt")
-    torch.save(test_dataset, "./data/processed/test.pt")
-    print(f"-> Saved data to ./data/processed")
+    torch.save(train_dataset, TRAIN_DATA)
+    torch.save(test_dataset, TEST_DATA)
+    print(f"-> Saved data to {PROCESSED_DATA.name}")
     
 
 if __name__ == "__main__":

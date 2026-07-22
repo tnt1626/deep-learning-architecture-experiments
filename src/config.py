@@ -1,0 +1,12 @@
+from pathlib import Path
+
+ROOT = Path().resolve().parent
+DATA = ROOT / 'data'
+RAW_DATA = DATA / 'raw'
+PROCESSED_DATA = DATA / 'processed'
+TRAIN_DATA = PROCESSED_DATA / 'train.pt'
+TEST_DATA = PROCESSED_DATA / 'test.pt'
+PARAMS = ROOT / 'params.yaml'
+TRAINING_LOG = ROOT / 'logs' / 'training_log.csv'
+MODEL = ROOT / 'models' / 'model.pth'
+METRICS = ROOT / 'metrics.json'

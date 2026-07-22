@@ -2,15 +2,16 @@ import os
 import csv
 import yaml
 import torch
+import torchvision
 import torch.nn as nn
 from torch.optim import Adam
 from torch.utils.data import DataLoader
-import torchvision
 from model import PinteeCNN
+from src.config import MODEL, PARAMS, TRAIN_DATA, TRAINING_LOG
 
 torch.serialization.add_safe_globals([torchvision.datasets.cifar.CIFAR10])
 
-with open("params.yaml", "r") as f:
+with open(PARAMS, "r") as f:
     params = yaml.safe_load(f)
 
 def main():
@@ -25,7 +26,7 @@ def main():
     lr = params['base']['learning_rate']
 
     # Load dataset
-    train_dataset = torch.load("./data/processed/train.pt", weights_only=False, map_location=device)
+    train_dataset = torch.load(TRAIN_DATA, weights_only=False, map_location=device)
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 
     # Load improvements
@@ -37,7 +38,7 @@ def main():
     optimizer = Adam(model.parameters(), lr=lr)  
     criterion = nn.CrossEntropyLoss()
 
-    with open("training_logs.csv", mode='w', newline="") as f:
+    with open(TRAINING_LOG, mode='w', newline="") as f:
         writer = csv.writer(f)
         # Write header row to CSV file
         writer.writerow(["epoch", "loss", "accuracy"])
@@ -78,8 +79,8 @@ def main():
             writer.writerow([epoch, epoch_loss, epoch_acc])
 
     # Save model
-    torch.save(model.state_dict(), "models/model.pth")
-    print(f"-> Saved to models/model.pth")
+    torch.save(model.state_dict(), MODEL)
+    print(f"-> Saved to {MODEL}")
 
 if __name__ == "__main__":
     main()
