@@ -20,15 +20,15 @@ class StemBlock(nn.Module):
 
 # TODO: ConvNeXt block
 class ConvNeXtBlock(nn.Module):
-    def __init__(self, in_channels: int, drop_patch: float = 0., layer_scale_init_value: float = 1e-6):
+    def __init__(self, dim: int, drop_patch: float = 0., layer_scale_init_value: float = 1e-6):
         super().__init__()
-        self.depthwise_conv = nn.Conv2d(in_channels, in_channels, kernel_size=7, groups=in_channels)
-        self.norm = nn.LayerNorm(in_channels)
-        self.pointwise_conv_exp = nn.Conv2d(in_channels, 4*in_channels, kernel_size=1)
+        self.depthwise_conv = nn.Conv2d(dim, dim, kernel_size=7, groups=dim)
+        self.norm = nn.LayerNorm(dim)
+        self.pointwise_conv_exp = nn.Conv2d(dim, 4*dim, kernel_size=1)
         self.activation = nn.GELU()
-        self.pointwise_conv_red = nn.Conv2d(4*in_channels, in_channels, kernel_size=1)
+        self.pointwise_conv_red = nn.Conv2d(4*dim, dim, kernel_size=1)
         self.gamma = nn.Parameter(
-            torch.ones(in_channels) * layer_scale_init_value, 
+            torch.ones(dim) * layer_scale_init_value, 
             requires_grad=True
         ) if layer_scale_init_value > 0 else None
         self.drop_patch = DropPath(drop_patch) if drop_patch > 0 else nn.Identity()
@@ -45,6 +45,19 @@ class ConvNeXtBlock(nn.Module):
         x = self.drop_patch(x)
         output = input + x
 
-        return output
+        return 
 
 
+class DownsamplingLayer(nn.Module):
+    def __init__(self, dim: int):
+        super().__init__()
+        self.downsampling = nn.Sequential(
+            nn.LayerNorm(dim),
+            nn.Conv2d(dim, 2*dim, kernel_size=2, stride=2)
+        )
+
+    def forward(self, x):
+        x = self.downsampling(x)
+        return x
+
+    
