@@ -6,7 +6,7 @@ from timm.models.layers import DropPath
 class StemBlock(nn.Module):
     def __init__(self, in_channels: int = 3, out_channels: int = 96):
         super().__init__()
-        self.conv = nn.Conv2d(in_channels, out_channels, kernel_size=4, padding=4)
+        self.conv = nn.Conv2d(in_channels, out_channels, kernel_size=4, padding=0)
         self.norm = nn.LayerNorm(out_channels)
 
     def forward(self, x):
