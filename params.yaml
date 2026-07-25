@@ -9,6 +9,7 @@ base:
   base_activation: sigmoid
   base_initialization: xavier
   optimizer: adam
+  seed: 42
 
 improvements:
   use_relu: true

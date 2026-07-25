@@ -9,12 +9,18 @@ from torch.utils.data import DataLoader
 from model import PinteeCNN
 from src.config import MODEL, PARAMS, TRAIN_DATA, TRAINING_LOG
 
+def set_seed(seed: int):
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+
 torch.serialization.add_safe_globals([torchvision.datasets.cifar.CIFAR10])
 
 with open(PARAMS, "r") as f:
     params = yaml.safe_load(f)
 
 def main():
+    seed = params['base']['seed']
+    set_seed(seed)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     # Create folder models if not exist
