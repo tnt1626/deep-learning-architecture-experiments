@@ -50,24 +50,22 @@ def compute_mean_std() -> Tuple[torch.Tensor, torch.Tensor]:
 
 
 def main():
-    # create processed folder if not exist
+    # Create processed folder if not exist
     os.makedirs(PROCESSED_DATA, exist_ok=True)
 
-    # process z-score
-    use_z_score = params['improvements']['use_z_score']
+    transform_lst = []
+    if params['base']['use_augmented']:
+        transform_lst.extend([
+            transforms.RandomCrop(32, padding=4),
+            transforms.RandomHorizontalFlip()
+        ])
 
-    transform_lst = [transforms.ToTensor()]
-
-    if use_z_score:
-        print(f"-> Applying Z-Score")
-
-        # mean, std = compute_mean_std()
-        transform_lst.append(transforms.Normalize(
-            (0.4914, 0.4822, 0.4465),
-            (0.2470, 0.2435, 0.2616)
-        ))
-    else:
-        print("-> Base Configuration")
+    # Applying z-score
+    mean, std = compute_mean_std()
+    transform_lst.append([
+        transforms.ToTensor(),
+        transforms.Normalize(mean, std)
+    ])
 
     compute_transform = transforms.Compose(transform_lst)
 
