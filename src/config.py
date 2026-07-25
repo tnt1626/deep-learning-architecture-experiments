@@ -1,6 +1,6 @@
 from pathlib import Path
 
-ROOT = Path().resolve().parent
+ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / 'data'
 RAW_DATA = DATA / 'raw'
 PROCESSED_DATA = DATA / 'processed'
