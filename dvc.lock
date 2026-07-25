@@ -10,85 +10,69 @@ stages:
       nfiles: 9
     - path: src/data_prep.py
       hash: md5
-      md5: ba340c48424895648dad505a062c24a8
-      size: 2365
+      md5: 44aa8ef312b6dc432cbbf60081479651
+      size: 2372
     params:
       params.yaml:
-        base.image_shape:
-        - 3
-        - 32
-        - 32
-        improvements.use_z_score: true
+        base.use_augmented: true
     outs:
     - path: data/processed
       hash: md5
-      md5: 0154d200c537808f0de37641fb234bfb.dir
-      size: 265867452
+      md5: e066dcdcd6493727b17c7486a347bcc4.dir
+      size: 265869602
       nfiles: 2
-  train:
-    cmd: python src/train.py
-    deps:
-    - path: data/processed
-      hash: md5
-      md5: 0154d200c537808f0de37641fb234bfb.dir
-      size: 265867452
-      nfiles: 2
-    - path: src/model.py
-      hash: md5
-      md5: c01a1b6533182b3cbb88c9ddea7a3338
-      size: 4892
-    - path: src/train.py
-      hash: md5
-      md5: cd478dd708f5ef444c8b303816a6bb2d
-      size: 2839
-    params:
-      params.yaml:
-        base:
-          batch_size: 256
-          epochs: 20
-          learning_rate: 0.001
-          image_shape:
-          - 3
-          - 32
-          - 32
-          base_activation: sigmoid
-          base_initialization: xavier
-          optimizer: adam
-        improvements:
-          use_relu: true
-          use_advanced_activation: false
-          use_z_score: true
-          use_batch_norm: true
-          use_he_initialization: false
-          use_skip_connection: false
-          reduce_learning_rate: false
-    outs:
-    - path: models/model.pth
-      hash: md5
-      md5: 55c0acf476364259110df3b3b2019c88
-      size: 35566815
-    - path: training_logs.csv
-      hash: md5
-      md5: 24f13726f4f97fc483f4a2b17adcf333
-      size: 635
   evaluate:
     cmd: python src/evaluate.py
     deps:
     - path: data/processed
       hash: md5
-      md5: 0154d200c537808f0de37641fb234bfb.dir
-      size: 265867452
+      md5: e066dcdcd6493727b17c7486a347bcc4.dir
+      size: 265869602
       nfiles: 2
     - path: models/model.pth
       hash: md5
-      md5: 55c0acf476364259110df3b3b2019c88
-      size: 35566815
+      md5: beb9cc8d6c0403f20ec8c71a32c7eaa1
+      size: 35505035
     - path: src/evaluate.py
       hash: md5
-      md5: 59bb2836620b96aea404cdc6d778c3dc
-      size: 1592
+      md5: 2fc1e5c1e30da3f4d333a6fa92636448
+      size: 1601
+    params:
+      params.yaml:
+        base.batch_size: 128
     outs:
     - path: metrics.json
       hash: md5
-      md5: 93e0d3d229e5e38ec7ae84c932f40ce7
-      size: 61
+      md5: 70f9205216fa301ab215474474045330
+      size: 58
+  train:
+    cmd: python src/train.py
+    deps:
+    - path: data/processed
+      hash: md5
+      md5: e066dcdcd6493727b17c7486a347bcc4.dir
+      size: 265869602
+      nfiles: 2
+    - path: src/model.py
+      hash: md5
+      md5: 83e5b61f089bd8fe64d323f3bd7e74e5
+      size: 3258
+    - path: src/train.py
+      hash: md5
+      md5: f2d1f97370e04f0d762eca46cd003504
+      size: 2888
+    params:
+      params.yaml:
+        base.batch_size: 128
+        base.epochs: 20
+        base.learning_rate: 0.001
+        base.seed: 42
+    outs:
+    - path: models/model.pth
+      hash: md5
+      md5: beb9cc8d6c0403f20ec8c71a32c7eaa1
+      size: 35505035
+    - path: training_log.csv
+      hash: md5
+      md5: 843aab344655dd9cf0a10cf9ada06b41
+      size: 625

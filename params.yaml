@@ -3,5 +3,4 @@ base:
   epochs: 20
   batch_size: 128
   learning_rate: 0.001
-  optimizer: adam
   use_augmented: true

@@ -223,3 +223,4 @@ models
 
 data/processed/
 *.pt
+/training_log.csv

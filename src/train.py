@@ -7,7 +7,7 @@ import torch.nn as nn
 from torch.optim import Adam
 from torch.utils.data import DataLoader
 from model import PinteeCNN
-from src.config import MODEL, PARAMS, TRAIN_DATA, TRAINING_LOG
+from config import MODEL, PARAMS, TRAIN_DATA, TRAINING_LOG
 
 def set_seed(seed: int):
     torch.manual_seed(seed)
@@ -35,9 +35,6 @@ def main():
     train_dataset = torch.load(TRAIN_DATA, weights_only=False, map_location=device)
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 
-    # Load improvements
-    if params['improvements']['reduce_learning_rate']:
-        lr = 1e-4
 
     # Initialize model, optimizer, loss
     model = PinteeCNN(n_classes=10).to(device)

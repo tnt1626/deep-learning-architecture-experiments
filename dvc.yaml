@@ -5,8 +5,7 @@ stages:
       - data/raw
       - src/data_prep.py
     params:
-      - base.image_shape
-      - improvements.use_z_score
+      - base.use_augmented
     outs:
       - data/processed
 
@@ -17,13 +16,14 @@ stages:
       - src/model.py
       - src/train.py
     params:
-      - base
-      - improvements
+      - base.seed
+      - base.epochs
+      - base.batch_size
+      - base.learning_rate
     outs:
-      - logs/training_log.csv
       - models/model.pth
     plots:
-      - logs/training_logs.csv:
+      - training_log.csv:
           x: epoch
 
   evaluate:
@@ -32,6 +32,8 @@ stages:
       - models/model.pth
       - data/processed
       - src/evaluate.py
+    params:
+      - base.batch_size
     metrics:
       - metrics.json:
           cache: false

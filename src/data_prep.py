@@ -2,7 +2,7 @@ from torchvision.datasets import CIFAR10
 from torch.utils.data import DataLoader
 from torchvision.transforms import transforms
 from typing import Tuple
-from src.config import (
+from config import (
     PARAMS, 
     RAW_DATA, 
     PROCESSED_DATA,
@@ -62,7 +62,7 @@ def main():
 
     # Applying z-score
     mean, std = compute_mean_std()
-    transform_lst.append([
+    transform_lst.extend([
         transforms.ToTensor(),
         transforms.Normalize(mean, std)
     ])
