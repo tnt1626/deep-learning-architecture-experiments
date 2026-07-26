@@ -218,7 +218,7 @@ __marimo__/
 .streamlit/secrets.toml
 /training_logs.csv
 
-training_logs.csv
+*/training_logs.csv
 models
 
 data/processed/
