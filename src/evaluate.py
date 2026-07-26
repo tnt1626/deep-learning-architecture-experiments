@@ -1,10 +1,11 @@
 import json
 import torch
 import yaml
+import argparse
 import torchvision
-from model import PinteeCNN
 from torch.utils.data import DataLoader
-from config import METRICS, MODEL, PARAMS, TEST_DATA
+from config import ROOT, PARAMS, TEST_DATA
+from registry import MODEL_REGISTRY
 
 torch.serialization.add_safe_globals([torchvision.datasets.cifar.CIFAR10])
 
@@ -19,8 +20,18 @@ def main():
     test_loader = DataLoader(test_dataset, batch_size=params['base']['batch_size'], shuffle=False)
 
     # Load trained model 
-    model = PinteeCNN().to(device)
-    model.load_state_dict(torch.load(MODEL))
+    parser = argparse.ArgumentParser(description="Get model from MODEL_REGISTRY.")
+    parser.add_argument("--model", required=True, choices=MODEL_REGISTRY.keys())
+    args = parser.parse_args()
+
+    output_dir = ROOT / "experiments" / args.model
+    metrics_path = output_dir / "metrics.json"
+    model_path = output_dir / "model.pth"
+
+    model_class = MODEL_REGISTRY[args.model]
+    model_params = params['models'][args.model]
+    model = model_class(**model_params).to(device)
+    model.load_state_dict(torch.load(model_path))
     model.eval() # Convert into evaluate mode
 
     criterion = torch.nn.CrossEntropyLoss()
@@ -48,7 +59,7 @@ def main():
         "accuracy": final_acc
     }
 
-    with open(METRICS, "w") as f:
+    with open(metrics_path, "w") as f:
         json.dump(metrics, f, indent=4)
 
     print(f"-> Evaluation Completed. Acc: {final_acc:.4f}, Loss: {final_loss:.4f}")
