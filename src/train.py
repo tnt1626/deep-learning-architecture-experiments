@@ -50,6 +50,7 @@ def main():
     criterion = nn.CrossEntropyLoss()
 
     output_dir = ROOT / "experiments" / args.model
+    output_dir.mkdir(parents=True, exist_ok=True)
     training_log = output_dir / "training_log.csv"
     model_path = output_dir / "model.pth"
     with open(training_log, mode='w', newline="") as f:
