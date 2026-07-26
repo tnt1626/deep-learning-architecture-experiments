@@ -2,8 +2,10 @@ import torch
 import torch.nn as nn
 
 class PinteeCNN(nn.Module):
-    def __init__(self, n_classes=10):
+    def __init__(self, n_classes: int=10, use_batch_norm: bool=False):
         super(PinteeCNN, self).__init__()
+
+        self.use_batch_norm = use_batch_norm
         
         # Block 1: (batch_size, 3, 32, 32) -> (batch_size, 64, 16, 16)
         self.conv_layer1 = nn.Sequential(
@@ -69,6 +71,11 @@ class PinteeCNN(nn.Module):
         self.fc_layer2 = nn.Sequential(
             nn.Linear(512, n_classes)
         )
+
+    def _batch_norm(self, n_features):
+        if self.use_batch_norm:
+            return nn.BatchNorm2d(n_features)
+        return nn.Identity()
 
     def forward(self, x):
         # Block 1
