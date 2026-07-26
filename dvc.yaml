@@ -9,31 +9,92 @@ stages:
     outs:
       - data/processed
 
-  train:
-    cmd: python src/train.py
+  train_lenet:
+    cmd: python src/train.py --model lenet
     deps:
-      - data/processed
-      - src/model.py
       - src/train.py
+      - src/config.py
+      - data/processed
+      - src/registry.py
+      - src/architectures/CNNs/LeNet_5.py
     params:
-      - base.seed
-      - base.epochs
-      - base.batch_size
-      - base.learning_rate
+      - base
+      - models.lenet
     outs:
-      - models/model.pth
-    plots:
-      - training_log.csv:
-          x: epoch
+      - experiments/lenet/model.pth
+      - experiments/lenet/training_log.csv
 
-  evaluate:
-    cmd: python src/evaluate.py
+  evaluate_lenet:
+    cmd: python src/evaluate.py --model lenet
     deps:
-      - models/model.pth
       - data/processed
       - src/evaluate.py
+      - src/config.py
+      - src/registry.py
+      - experiments/lenet/model.pth
+      - src/architectures/CNNs/LeNet_5.py
     params:
-      - base.batch_size
+      - models.lenet
     metrics:
-      - metrics.json:
+      - experiments/lenet/metrics.json:
+          cache: false
+
+  train_pintee_cnn:
+    cmd: python src/train.py --model pintee_cnn
+    deps:
+      - src/train.py
+      - src/config.py
+      - data/processed
+      - src/registry.py
+      - src/architectures/CNNs/VGG_ResNet_Hybrid.py
+    params:
+      - base
+      - models.pintee_cnn
+    outs:
+      - experiments/pintee_cnn/model.pth
+      - experiments/pintee_cnn/training_log.csv
+
+  evaluate_pintee_cnn:
+    cmd: python src/evaluate.py --model pintee_cnn
+    deps:
+      - data/processed
+      - src/evaluate.py
+      - src/config.py
+      - src/registry.py
+      - experiments/pintee_cnn/model.pth
+      - src/architectures/CNNs/VGG_ResNet_Hybrid.py
+    params:
+      - models.pintee_cnn
+    metrics:
+      - experiments/pintee_cnn/metrics.json:
+          cache: false
+
+  train_convnext_v1:
+    cmd: python src/train.py --model convnext_v1
+    deps:
+      - src/train.py
+      - src/config.py
+      - data/processed
+      - src/registry.py
+      - src/architectures/CNNs/ConvNeXt_v1_Adapted.py
+    params:
+      - base
+      - models.convnext_v1
+    outs:
+      - experiments/convnext_v1/model.pth
+      - experiments/convnext_v1/training_log.csv
+
+  evaluate_convnext_v1:
+    cmd: python src/evaluate.py --model convnext_v1
+    deps:
+      - data/processed
+      - src/evaluate.py
+      - src/config.py
+      - src/registry.py
+      - experiments/convnext_v1/model.pth
+      - src/architectures/CNNs/ConvNeXt_v1_Adapted.py
+    params:
+      - models.convnext_v1
+    metrics:
+      - experiments/convnext_v1/metrics.json:
           cache: false

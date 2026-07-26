@@ -76,3 +76,267 @@ stages:
       hash: md5
       md5: 843aab344655dd9cf0a10cf9ada06b41
       size: 625
+  train_lenet:
+    cmd: python src/train.py --model lenet
+    deps:
+    - path: data/processed
+      hash: md5
+      md5: e066dcdcd6493727b17c7486a347bcc4.dir
+      size: 265869602
+      nfiles: 2
+    - path: src/architectures/CNNs/LeNet_5.py
+      hash: md5
+      md5: cebf284f1199850ad7e779ed489ec656
+      size: 1320
+    - path: src/config.py
+      hash: md5
+      md5: 95ed7a6317252abaa071d99421fabb3b
+      size: 262
+    - path: src/registry.py
+      hash: md5
+      md5: c77352f39debd30736713be537aeb1d9
+      size: 276
+    - path: src/train.py
+      hash: md5
+      md5: 3c3c117f97861f139cf7e36e671d62a0
+      size: 3425
+    params:
+      params.yaml:
+        base:
+          seed: 42
+          epochs: 20
+          batch_size: 128
+          learning_rate: 0.001
+          use_augmented: true
+        models.lenet:
+          n_classes: 10
+    outs:
+    - path: experiments/lenet/model.pth
+      hash: md5
+      md5: 7427e975827aa3ee92207989a9cb783e
+      size: 335525
+    - path: experiments/lenet/training_log.csv
+      hash: md5
+      md5: 1a2b87e3287bcb2e53dbed361f064aa4
+      size: 618
+  evaluate_lenet:
+    cmd: python src/evaluate.py --model lenet
+    deps:
+    - path: data/processed
+      hash: md5
+      md5: e066dcdcd6493727b17c7486a347bcc4.dir
+      size: 265869602
+      nfiles: 2
+    - path: experiments/lenet/model.pth
+      hash: md5
+      md5: 7427e975827aa3ee92207989a9cb783e
+      size: 335525
+    - path: src/architectures/CNNs/LeNet_5.py
+      hash: md5
+      md5: cebf284f1199850ad7e779ed489ec656
+      size: 1320
+    - path: src/config.py
+      hash: md5
+      md5: 95ed7a6317252abaa071d99421fabb3b
+      size: 262
+    - path: src/evaluate.py
+      hash: md5
+      md5: 1cb16b838cada1b90293a77cb03a0125
+      size: 2071
+    - path: src/registry.py
+      hash: md5
+      md5: c77352f39debd30736713be537aeb1d9
+      size: 276
+    params:
+      params.yaml:
+        models.lenet:
+          n_classes: 10
+    outs:
+    - path: experiments/lenet/metrics.json
+      hash: md5
+      md5: 58bd5c1a6dfa3e5b6e25049a99d96600
+      size: 57
+  train_pintee_cnn:
+    cmd: python src/train.py --model pintee_cnn
+    deps:
+    - path: data/processed
+      hash: md5
+      md5: e066dcdcd6493727b17c7486a347bcc4.dir
+      size: 265869602
+      nfiles: 2
+    - path: src/architectures/CNNs/VGG_ResNet_Hybrid.py
+      hash: md5
+      md5: e6d29c850f6bcffb4a681999cba9572e
+      size: 3484
+    - path: src/config.py
+      hash: md5
+      md5: 95ed7a6317252abaa071d99421fabb3b
+      size: 262
+    - path: src/registry.py
+      hash: md5
+      md5: c77352f39debd30736713be537aeb1d9
+      size: 276
+    - path: src/train.py
+      hash: md5
+      md5: 3c3c117f97861f139cf7e36e671d62a0
+      size: 3425
+    params:
+      params.yaml:
+        base:
+          seed: 42
+          epochs: 20
+          batch_size: 128
+          learning_rate: 0.001
+          use_augmented: true
+        models.pintee_cnn:
+          n_classes: 10
+          use_batch_norm: true
+    outs:
+    - path: experiments/pintee_cnn/model.pth
+      hash: md5
+      md5: beb9cc8d6c0403f20ec8c71a32c7eaa1
+      size: 35505035
+    - path: experiments/pintee_cnn/training_log.csv
+      hash: md5
+      md5: 843aab344655dd9cf0a10cf9ada06b41
+      size: 625
+  evaluate_pintee_cnn:
+    cmd: python src/evaluate.py --model pintee_cnn
+    deps:
+    - path: data/processed
+      hash: md5
+      md5: e066dcdcd6493727b17c7486a347bcc4.dir
+      size: 265869602
+      nfiles: 2
+    - path: experiments/pintee_cnn/model.pth
+      hash: md5
+      md5: beb9cc8d6c0403f20ec8c71a32c7eaa1
+      size: 35505035
+    - path: src/architectures/CNNs/VGG_ResNet_Hybrid.py
+      hash: md5
+      md5: e6d29c850f6bcffb4a681999cba9572e
+      size: 3484
+    - path: src/config.py
+      hash: md5
+      md5: 95ed7a6317252abaa071d99421fabb3b
+      size: 262
+    - path: src/evaluate.py
+      hash: md5
+      md5: 1cb16b838cada1b90293a77cb03a0125
+      size: 2071
+    - path: src/registry.py
+      hash: md5
+      md5: c77352f39debd30736713be537aeb1d9
+      size: 276
+    params:
+      params.yaml:
+        models.pintee_cnn:
+          n_classes: 10
+          use_batch_norm: true
+    outs:
+    - path: experiments/pintee_cnn/metrics.json
+      hash: md5
+      md5: 424eea3bd191d8dec61bba7e40beafc2
+      size: 58
+  train_convnext_v1:
+    cmd: python src/train.py --model convnext_v1
+    deps:
+    - path: data/processed
+      hash: md5
+      md5: e066dcdcd6493727b17c7486a347bcc4.dir
+      size: 265869602
+      nfiles: 2
+    - path: src/architectures/CNNs/ConvNeXt_v1_Adapted.py
+      hash: md5
+      md5: 1556081563ae19ddb83122269650921c
+      size: 4085
+    - path: src/config.py
+      hash: md5
+      md5: 95ed7a6317252abaa071d99421fabb3b
+      size: 262
+    - path: src/registry.py
+      hash: md5
+      md5: c77352f39debd30736713be537aeb1d9
+      size: 276
+    - path: src/train.py
+      hash: md5
+      md5: 3c3c117f97861f139cf7e36e671d62a0
+      size: 3425
+    params:
+      params.yaml:
+        base:
+          seed: 42
+          epochs: 20
+          batch_size: 128
+          learning_rate: 0.001
+          use_augmented: true
+        models.convnext_v1:
+          num_classes: 10
+          depths:
+          - 3
+          - 3
+          - 9
+          - 3
+          dims:
+          - 96
+          - 192
+          - 384
+          - 768
+          drop_patch: 0.1
+    outs:
+    - path: experiments/convnext_v1/model.pth
+      hash: md5
+      md5: a713d9299018966e5cb75bdd55ed660e
+      size: 111356827
+    - path: experiments/convnext_v1/training_log.csv
+      hash: md5
+      md5: 7b96b8a94f2f7fcb4ab0c28b594f18b5
+      size: 636
+  evaluate_convnext_v1:
+    cmd: python src/evaluate.py --model convnext_v1
+    deps:
+    - path: data/processed
+      hash: md5
+      md5: e066dcdcd6493727b17c7486a347bcc4.dir
+      size: 265869602
+      nfiles: 2
+    - path: experiments/convnext_v1/model.pth
+      hash: md5
+      md5: a713d9299018966e5cb75bdd55ed660e
+      size: 111356827
+    - path: src/architectures/CNNs/ConvNeXt_v1_Adapted.py
+      hash: md5
+      md5: 1556081563ae19ddb83122269650921c
+      size: 4085
+    - path: src/config.py
+      hash: md5
+      md5: 95ed7a6317252abaa071d99421fabb3b
+      size: 262
+    - path: src/evaluate.py
+      hash: md5
+      md5: 1cb16b838cada1b90293a77cb03a0125
+      size: 2071
+    - path: src/registry.py
+      hash: md5
+      md5: c77352f39debd30736713be537aeb1d9
+      size: 276
+    params:
+      params.yaml:
+        models.convnext_v1:
+          num_classes: 10
+          depths:
+          - 3
+          - 3
+          - 9
+          - 3
+          dims:
+          - 96
+          - 192
+          - 384
+          - 768
+          drop_patch: 0.1
+    outs:
+    - path: experiments/convnext_v1/metrics.json
+      hash: md5
+      md5: 35a8ac15d4f4a883e3a950eb835b4fdb
+      size: 58

@@ -1,13 +1,14 @@
 import os
 import csv
 import yaml
+import argparse
 import torch
 import torchvision
 import torch.nn as nn
 from torch.optim import Adam
 from torch.utils.data import DataLoader
-from model import PinteeCNN
-from config import MODEL, PARAMS, TRAIN_DATA, TRAINING_LOG
+from config import PARAMS, ROOT, TRAIN_DATA
+from registry import MODEL_REGISTRY
 
 def set_seed(seed: int):
     torch.manual_seed(seed)
@@ -35,13 +36,24 @@ def main():
     train_dataset = torch.load(TRAIN_DATA, weights_only=False, map_location=device)
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 
-
     # Initialize model, optimizer, loss
-    model = PinteeCNN(n_classes=10).to(device)
+    ## Get model name argument
+    parser = argparse.ArgumentParser(description="Get model from MODEL_REGISTRY.")
+    parser.add_argument("--model", required=True, choices=MODEL_REGISTRY.keys())
+    args = parser.parse_args()
+
+    model_class = MODEL_REGISTRY[args.model]
+    model_params = params["models"][args.model]
+    model = model_class(**model_params).to(device)
+
     optimizer = Adam(model.parameters(), lr=lr)  
     criterion = nn.CrossEntropyLoss()
 
-    with open(TRAINING_LOG, mode='w', newline="") as f:
+    output_dir = ROOT / "experiments" / args.model
+    output_dir.mkdir(parents=True, exist_ok=True)
+    training_log = output_dir / "training_log.csv"
+    model_path = output_dir / "model.pth"
+    with open(training_log, mode='w', newline="") as f:
         writer = csv.writer(f)
         # Write header row to CSV file
         writer.writerow(["epoch", "loss", "accuracy"])
@@ -82,8 +94,8 @@ def main():
             writer.writerow([epoch, epoch_loss, epoch_acc])
 
     # Save model
-    torch.save(model.state_dict(), MODEL)
-    print(f"-> Saved to {MODEL}")
+    torch.save(model.state_dict(), model_path)
+    print(f"-> Saved to {model_path}")
 
 if __name__ == "__main__":
     main()

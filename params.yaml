@@ -4,3 +4,17 @@ base:
   batch_size: 128
   learning_rate: 0.001
   use_augmented: true
+
+models:
+  lenet:
+    n_classes: 10
+
+  pintee_cnn:
+    n_classes: 10
+    use_batch_norm: true
+    
+  convnext_v1:
+    num_classes: 10
+    depths: [3, 3, 9, 3]
+    dims: [96, 192, 384, 768]
+    drop_patch: 0.1
