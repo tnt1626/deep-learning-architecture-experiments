@@ -1,6 +1,8 @@
 import os
 import csv
 import yaml
+import time
+import json
 import argparse
 import torch
 import torchvision
@@ -20,6 +22,8 @@ with open(PARAMS, "r") as f:
     params = yaml.safe_load(f)
 
 def main():
+    start = time.time()
+
     seed = params['base']['seed']
     set_seed(seed)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -52,7 +56,9 @@ def main():
     output_dir = ROOT / "experiments" / args.model
     output_dir.mkdir(parents=True, exist_ok=True)
     training_log = output_dir / "training_log.csv"
+    train_stats = output_dir / "train_stats.json"
     model_path = output_dir / "model.pth"
+
     with open(training_log, mode='w', newline="") as f:
         writer = csv.writer(f)
         # Write header row to CSV file
@@ -92,6 +98,14 @@ def main():
             
             print(f"Epoch [{epoch+1}/{epochs}] - Loss: {epoch_loss:.4f} - Acc: {epoch_acc:.4f}")
             writer.writerow([epoch, epoch_loss, epoch_acc])
+
+    training_time = (time.time() - start) / 60
+    stats = {
+        "num_params": sum(p.numel() for p in model.parameters() if p.requires_grad),
+        "training_time_minutes": round(training_time)
+    }
+    with open(train_stats, "w", encoding="utf-8") as f:
+            json.dump(stats, f, indent=4)
 
     # Save model
     torch.save(model.state_dict(), model_path)

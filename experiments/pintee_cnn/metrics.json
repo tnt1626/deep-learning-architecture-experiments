@@ -1,4 +1,19 @@
 {
-    "loss": 0.5840650936470756,
-    "accuracy": 0.8095
+    "num_params": 8873994,
+    "training_time_minutes": 7,
+    "loss": 0.5840317923811418,
+    "accuracy": 0.8084,
+    "inference_time_cpu_ms": 2.793802230012261,
+    "per_class_accuracy": {
+        "airplane": 0.78,
+        "automobile": 0.87,
+        "bird": 0.78,
+        "cat": 0.75,
+        "deer": 0.81,
+        "dog": 0.6,
+        "frog": 0.86,
+        "horse": 0.84,
+        "ship": 0.95,
+        "truck": 0.85
+    }
 }

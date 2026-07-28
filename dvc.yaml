@@ -15,7 +15,6 @@ stages:
       - src/train.py
       - src/config.py
       - data/processed
-      - src/registry.py
       - src/architectures/CNNs/LeNet_5.py
     params:
       - base
@@ -23,6 +22,7 @@ stages:
     outs:
       - experiments/lenet/model.pth
       - experiments/lenet/training_log.csv
+      - experiments/lenet/train_stats.json
 
   evaluate_lenet:
     cmd: python src/evaluate.py --model lenet
@@ -30,9 +30,9 @@ stages:
       - data/processed
       - src/evaluate.py
       - src/config.py
-      - src/registry.py
       - experiments/lenet/model.pth
       - src/architectures/CNNs/LeNet_5.py
+      - experiments/lenet/train_stats.json
     params:
       - models.lenet
     metrics:
@@ -45,7 +45,6 @@ stages:
       - src/train.py
       - src/config.py
       - data/processed
-      - src/registry.py
       - src/architectures/CNNs/VGG_ResNet_Hybrid.py
     params:
       - base
@@ -53,6 +52,7 @@ stages:
     outs:
       - experiments/pintee_cnn/model.pth
       - experiments/pintee_cnn/training_log.csv
+      - experiments/pintee_cnn/train_stats.json
 
   evaluate_pintee_cnn:
     cmd: python src/evaluate.py --model pintee_cnn
@@ -60,8 +60,8 @@ stages:
       - data/processed
       - src/evaluate.py
       - src/config.py
-      - src/registry.py
       - experiments/pintee_cnn/model.pth
+      - experiments/pintee_cnn/train_stats.json
       - src/architectures/CNNs/VGG_ResNet_Hybrid.py
     params:
       - models.pintee_cnn
@@ -75,7 +75,6 @@ stages:
       - src/train.py
       - src/config.py
       - data/processed
-      - src/registry.py
       - src/architectures/CNNs/ConvNeXt_v1_Adapted.py
     params:
       - base
@@ -83,6 +82,7 @@ stages:
     outs:
       - experiments/convnext_v1/model.pth
       - experiments/convnext_v1/training_log.csv
+      - experiments/convnext_v1/train_stats.json
 
   evaluate_convnext_v1:
     cmd: python src/evaluate.py --model convnext_v1
@@ -90,8 +90,8 @@ stages:
       - data/processed
       - src/evaluate.py
       - src/config.py
-      - src/registry.py
       - experiments/convnext_v1/model.pth
+      - experiments/convnext_v1/train_stats.json
       - src/architectures/CNNs/ConvNeXt_v1_Adapted.py
     params:
       - models.convnext_v1
