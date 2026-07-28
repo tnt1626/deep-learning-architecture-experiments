@@ -92,14 +92,10 @@ stages:
       hash: md5
       md5: 95ed7a6317252abaa071d99421fabb3b
       size: 262
-    - path: src/registry.py
-      hash: md5
-      md5: c77352f39debd30736713be537aeb1d9
-      size: 276
     - path: src/train.py
       hash: md5
-      md5: 3c3c117f97861f139cf7e36e671d62a0
-      size: 3425
+      md5: c1f57da5b38af83bfd7df4aea4b95169
+      size: 3830
     params:
       params.yaml:
         base:
@@ -113,12 +109,16 @@ stages:
     outs:
     - path: experiments/lenet/model.pth
       hash: md5
-      md5: 7427e975827aa3ee92207989a9cb783e
+      md5: a19620326e39a38aff3dca10f6df462a
       size: 335525
+    - path: experiments/lenet/train_stats.json
+      hash: md5
+      md5: d23a835389dbecdc860760411af04726
+      size: 59
     - path: experiments/lenet/training_log.csv
       hash: md5
-      md5: 1a2b87e3287bcb2e53dbed361f064aa4
-      size: 618
+      md5: c1b145b704e24865d78cab2de91e8d2a
+      size: 621
   evaluate_lenet:
     cmd: python src/evaluate.py --model lenet
     deps:
@@ -129,8 +129,12 @@ stages:
       nfiles: 2
     - path: experiments/lenet/model.pth
       hash: md5
-      md5: 7427e975827aa3ee92207989a9cb783e
+      md5: a19620326e39a38aff3dca10f6df462a
       size: 335525
+    - path: experiments/lenet/train_stats.json
+      hash: md5
+      md5: d23a835389dbecdc860760411af04726
+      size: 59
     - path: src/architectures/CNNs/LeNet_5.py
       hash: md5
       md5: cebf284f1199850ad7e779ed489ec656
@@ -141,12 +145,8 @@ stages:
       size: 262
     - path: src/evaluate.py
       hash: md5
-      md5: 1cb16b838cada1b90293a77cb03a0125
-      size: 2071
-    - path: src/registry.py
-      hash: md5
-      md5: c77352f39debd30736713be537aeb1d9
-      size: 276
+      md5: a0dc98c5353c835da3cd83da8817aec6
+      size: 3389
     params:
       params.yaml:
         models.lenet:
@@ -154,8 +154,8 @@ stages:
     outs:
     - path: experiments/lenet/metrics.json
       hash: md5
-      md5: 58bd5c1a6dfa3e5b6e25049a99d96600
-      size: 57
+      md5: c58c283740803ea2a6712927b973b94e
+      size: 429
   train_pintee_cnn:
     cmd: python src/train.py --model pintee_cnn
     deps:
@@ -172,14 +172,10 @@ stages:
       hash: md5
       md5: 95ed7a6317252abaa071d99421fabb3b
       size: 262
-    - path: src/registry.py
-      hash: md5
-      md5: c77352f39debd30736713be537aeb1d9
-      size: 276
     - path: src/train.py
       hash: md5
-      md5: 3c3c117f97861f139cf7e36e671d62a0
-      size: 3425
+      md5: c1f57da5b38af83bfd7df4aea4b95169
+      size: 3830
     params:
       params.yaml:
         base:
@@ -196,6 +192,10 @@ stages:
       hash: md5
       md5: beb9cc8d6c0403f20ec8c71a32c7eaa1
       size: 35505035
+    - path: experiments/pintee_cnn/train_stats.json
+      hash: md5
+      md5: 62a659cfb051e64afe2ae4a27620144f
+      size: 61
     - path: experiments/pintee_cnn/training_log.csv
       hash: md5
       md5: 843aab344655dd9cf0a10cf9ada06b41
@@ -212,6 +212,10 @@ stages:
       hash: md5
       md5: beb9cc8d6c0403f20ec8c71a32c7eaa1
       size: 35505035
+    - path: experiments/pintee_cnn/train_stats.json
+      hash: md5
+      md5: 62a659cfb051e64afe2ae4a27620144f
+      size: 61
     - path: src/architectures/CNNs/VGG_ResNet_Hybrid.py
       hash: md5
       md5: e6d29c850f6bcffb4a681999cba9572e
@@ -222,12 +226,8 @@ stages:
       size: 262
     - path: src/evaluate.py
       hash: md5
-      md5: 1cb16b838cada1b90293a77cb03a0125
-      size: 2071
-    - path: src/registry.py
-      hash: md5
-      md5: c77352f39debd30736713be537aeb1d9
-      size: 276
+      md5: a0dc98c5353c835da3cd83da8817aec6
+      size: 3389
     params:
       params.yaml:
         models.pintee_cnn:
@@ -236,8 +236,8 @@ stages:
     outs:
     - path: experiments/pintee_cnn/metrics.json
       hash: md5
-      md5: 424eea3bd191d8dec61bba7e40beafc2
-      size: 58
+      md5: b5fd6b00ff9ec8abaeb9c669356b5cf3
+      size: 428
   train_convnext_v1:
     cmd: python src/train.py --model convnext_v1
     deps:
@@ -254,14 +254,10 @@ stages:
       hash: md5
       md5: 95ed7a6317252abaa071d99421fabb3b
       size: 262
-    - path: src/registry.py
-      hash: md5
-      md5: c77352f39debd30736713be537aeb1d9
-      size: 276
     - path: src/train.py
       hash: md5
-      md5: 3c3c117f97861f139cf7e36e671d62a0
-      size: 3425
+      md5: c1f57da5b38af83bfd7df4aea4b95169
+      size: 3830
     params:
       params.yaml:
         base:
@@ -273,10 +269,10 @@ stages:
         models.convnext_v1:
           num_classes: 10
           depths:
-          - 3
-          - 3
-          - 9
-          - 3
+          - 2
+          - 2
+          - 6
+          - 2
           dims:
           - 96
           - 192
@@ -286,12 +282,16 @@ stages:
     outs:
     - path: experiments/convnext_v1/model.pth
       hash: md5
-      md5: a713d9299018966e5cb75bdd55ed660e
-      size: 111356827
+      md5: 661557e4392102e6c0cbefc1de6e08df
+      size: 76324083
+    - path: experiments/convnext_v1/train_stats.json
+      hash: md5
+      md5: 236663099cf9d55579295ef950e054fd
+      size: 63
     - path: experiments/convnext_v1/training_log.csv
       hash: md5
-      md5: 7b96b8a94f2f7fcb4ab0c28b594f18b5
-      size: 636
+      md5: 764a55215a4402874dcc943e0bff4b64
+      size: 629
   evaluate_convnext_v1:
     cmd: python src/evaluate.py --model convnext_v1
     deps:
@@ -302,8 +302,12 @@ stages:
       nfiles: 2
     - path: experiments/convnext_v1/model.pth
       hash: md5
-      md5: a713d9299018966e5cb75bdd55ed660e
-      size: 111356827
+      md5: 661557e4392102e6c0cbefc1de6e08df
+      size: 76324083
+    - path: experiments/convnext_v1/train_stats.json
+      hash: md5
+      md5: 236663099cf9d55579295ef950e054fd
+      size: 63
     - path: src/architectures/CNNs/ConvNeXt_v1_Adapted.py
       hash: md5
       md5: 1556081563ae19ddb83122269650921c
@@ -314,21 +318,17 @@ stages:
       size: 262
     - path: src/evaluate.py
       hash: md5
-      md5: 1cb16b838cada1b90293a77cb03a0125
-      size: 2071
-    - path: src/registry.py
-      hash: md5
-      md5: c77352f39debd30736713be537aeb1d9
-      size: 276
+      md5: a0dc98c5353c835da3cd83da8817aec6
+      size: 3389
     params:
       params.yaml:
         models.convnext_v1:
           num_classes: 10
           depths:
-          - 3
-          - 3
-          - 9
-          - 3
+          - 2
+          - 2
+          - 6
+          - 2
           dims:
           - 96
           - 192
@@ -338,5 +338,5 @@ stages:
     outs:
     - path: experiments/convnext_v1/metrics.json
       hash: md5
-      md5: 35a8ac15d4f4a883e3a950eb835b4fdb
-      size: 58
+      md5: e351eb5b74ecf864c04c0979b130c7fb
+      size: 431
