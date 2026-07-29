@@ -340,3 +340,23 @@ stages:
       hash: md5
       md5: e351eb5b74ecf864c04c0979b130c7fb
       size: 431
+  benchmark:
+    cmd: python src/benchmark.py
+    deps:
+    - path: experiments/convnext_v1/metrics.json
+      hash: md5
+      md5: e351eb5b74ecf864c04c0979b130c7fb
+      size: 431
+    - path: experiments/lenet/metrics.json
+      hash: md5
+      md5: c58c283740803ea2a6712927b973b94e
+      size: 429
+    - path: experiments/pintee_cnn/metrics.json
+      hash: md5
+      md5: b5fd6b00ff9ec8abaeb9c669356b5cf3
+      size: 428
+    outs:
+    - path: reports/benchmark_report.md
+      hash: md5
+      md5: e36186446bdfb8999663cd6fbc05d10b
+      size: 2580
