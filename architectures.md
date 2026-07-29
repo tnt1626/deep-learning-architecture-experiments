@@ -8,9 +8,10 @@ A collection of deep learning architectures implemented from scratch in PyTorch.
 
 1. [LeNet-5](#lenet-5)
 2. [VGG–ResNet Hybrid (PinteeCNN)](#vgg-resnet-hybrid-pinteecnn)
-3. [Vanilla RNN](#vanilla-rnn)
-4. [LSTM](#lstm-long-short-term-memory)
-5. [GRU](#gru-gated-recurrent-unit)
+3. [ConvNeXt v1](#convnext-v1)
+4. [Vanilla RNN](#vanilla-rnn)
+5. [LSTM](#lstm-long-short-term-memory)
+6. [GRU](#gru-gated-recurrent-unit)
 
 ---
 
@@ -97,6 +98,46 @@ Conv (ReLU + MaxPool)
 - **ResNet-style shortcuts**: skip connections added after the second conv in each block to mitigate vanishing gradients
 - Channel dimensions double at each block (64 → 128 → 256 → 512)
 - Default output: **10 classes** (configurable)
+
+---
+
+## ConvNeXt v1
+
+**File:** `ConvNeXt_v1_Adapted.py`  
+**Class:** `ConvNeXt_V1`
+
+### Overview
+A CIFAR-10 adapted ConvNeXt v1 implementation. Compared with the original ImageNet design, this version starts with a stride-1 stem so the model preserves more spatial detail on 32×32 inputs. It uses depthwise convolutions, LayerNorm, GELU activations, residual blocks, and a global average pooling classifier head.
+
+### Architecture diagram
+
+![ConvNeXt v1 Architecture](diagrams/convnextv1_adapt_architecture.svg)
+
+```
+Input → StemBlock → Stage 1 → Downsample → Stage 2 → Downsample → Stage 3 → Downsample → Stage 4 → GAP → Linear
+    3×3 conv   [3 blocks]               [3 blocks]            [9 blocks]             [3 blocks]
+```
+
+### Stage table
+
+| Stage | Input Channels | Output Channels | Spatial Change | Repeated Blocks |
+|-------|----------------|-----------------|----------------|-----------------|
+| StemBlock | 3 | 96 | 32×32 → 32×32 | 1 |
+| Stage 1 | 96 | 96 | 32×32 → 32×32 | 3 ConvNeXt blocks |
+| Downsample 1 | 96 | 192 | 32×32 → 16×16 | 1 |
+| Stage 2 | 192 | 192 | 16×16 → 16×16 | 3 ConvNeXt blocks |
+| Downsample 2 | 192 | 384 | 16×16 → 8×8 | 1 |
+| Stage 3 | 384 | 384 | 8×8 → 8×8 | 9 ConvNeXt blocks |
+| Downsample 3 | 384 | 768 | 8×8 → 4×4 | 1 |
+| Stage 4 | 768 | 768 | 4×4 → 4×4 | 3 ConvNeXt blocks |
+| GlobalAveragePoolingHead | 768 | n_classes | 4×4 → 1×1 | 1 |
+
+### Key design choices
+- Uses a **3×3 stem with stride 1** instead of the original ConvNeXt stride-4 stem to suit CIFAR-10 resolution
+- Applies **depthwise 7×7 convolutions** inside each block for efficient spatial mixing
+- Uses **LayerNorm + GELU + pointwise expansion/reduction** as the core block pattern
+- Adds **stochastic depth** through DropPath and optional **layer scale** for training stability
+- Default output: **10 classes**
 
 ---
 
@@ -270,6 +311,7 @@ Uses two linear layers:
 |---|---|---|---|---|
 | LeNet-5 | CNN | Images (3×32×32) | Classic conv + FC pipeline | Low |
 | VGG–ResNet Hybrid | CNN | Images (3×32×32) | VGG blocks + residual shortcuts | High |
+| ConvNeXt v1 | CNN | Images (3×32×32) | Modern conv blocks with depthwise conv + LayerNorm | Very High |
 | Vanilla RNN | RNN | Sequences | Single hidden state, no gating | Very Low |
 | LSTM | RNN | Sequences | Cell state + 4-gate memory control | High |
 | GRU | RNN | Sequences | 2-gate simplified LSTM variant | Medium |

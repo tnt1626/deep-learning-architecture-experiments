@@ -1,176 +1,66 @@
-# CNN Experiments with DVC
+# CNN Architecture Benchmark - CIFAR-10
 
-A PyTorch-based CNN project for CIFAR-10 image classification with DVC (Data Version Control) pipeline management. This repository demonstrates ML experiment tracking and parameter tuning for convolutional neural networks.
+Reproducible benchmark for comparing three CNN architectures on CIFAR-10 with a DVC pipeline. Every experiment is tracked and can be reproduced with a single `dvc repro` run.
 
-## Overview
+## Benchmark Summary
 
-This project implements a configurable CNN architecture (PinteeCNN) to classify images from the CIFAR-10 dataset. It uses DVC to manage reproducible data pipelines and track experiments with different hyperparameter configurations and architectural improvements.
+| Model | Accuracy | Params | Inference |
+|---|---:|---:|---:|
+| LeNet-5 | 63.24% | 82,838 | 0.428 ms |
+| PinteeCNN | 80.84% | 8,873,994 | 2.794 ms |
+| ConvNeXt v1 | 86.34% | 19,071,562 | 11.332 ms |
 
-**Current Performance:** 74.27% test accuracy
+Full results and class-level analysis are available in [reports/benchmark_report.md](reports/benchmark_report.md).
 
-## Project Structure
+## Key Takeaways
 
-```
-├── src/                      # Source code
-│   ├── model.py             # CNN architecture definition
-│   ├── train.py             # Training script
-│   ├── evaluate.py          # Evaluation script
-│   └── data_prep.py         # Data preparation and preprocessing
-├── data/                    # Data directory
-│   ├── raw/                 # Raw CIFAR-10 dataset
-│   └── processed/           # Processed training/test data (PyTorch format)
-├── models/                  # Trained model weights
-│   └── model.pth           # Serialized model
-├── dvc.yaml                 # DVC pipeline stages
-├── params.yaml              # Configuration parameters
-├── pyproject.toml           # Project dependencies
-├── metrics.json             # Evaluation metrics
-├── training_logs.csv        # Training history
-└── main.py                  # Entry point
-```
+- LeNet-5 is the fastest and smallest model.
+- PinteeCNN gives the best balance between accuracy, size, and inference speed.
+- ConvNeXt v1 achieves the highest accuracy, but at a much higher parameter and latency cost.
 
-## Setup
+## Design Decisions
 
-### Requirements
+- **Fair comparison:** all models trained with identical hyperparameters 
+  (lr, epochs, batch size, seed) — only architecture differs.
+- **Data augmentation:** RandomHorizontalFlip + RandomCrop applied to 
+  all models to reduce overfitting without favoring any architecture.
+- **ConvNeXt adaptation:** stem modified from stride=4 to stride=1 for 
+  CIFAR-10's 32×32 input. Original design targets 224×224 (ImageNet).
+- **Inference time:** measured on CPU with batch size=1 and 10-run warmup, 
+  averaged over 100 runs for stability.
 
-- Python >= 3.13
-- PyTorch
-- DVC >= 3.67.1
-- NumPy, YAML, Matplotlib
+## Reproduce
 
-### Installation
-
-1. Clone the repository:
 ```bash
 git clone <repo-url>
-cd cnn-experiments-dvc
-```
-
-2. Install dependencies:
-```bash
-pip install -e .
-```
-
-3. Initialize DVC (if not already initialized):
-```bash
-dvc init
-```
-
-## Configuration
-
-All model parameters are defined in `params.yaml`:
-
-### Base Configuration
-- `batch_size`: Training batch size (default: 256)
-- `epochs`: Number of training epochs (default: 20)
-- `learning_rate`: Adam optimizer learning rate (default: 0.001)
-- `image_shape`: Input image dimensions [channels, height, width] (default: [3, 32, 32])
-- `optimizer`: Optimization algorithm (default: adam)
-
-### Improvements (Feature Flags)
-- `use_relu`: Enable ReLU activation (default: true)
-- `use_advanced_activation`: Use SiLU activation instead (default: false)
-- `use_z_score`: Apply z-score normalization (default: true)
-- `use_batch_norm`: Add batch normalization layers (default: false)
-- `use_he_initialization`: Use He initialization (default: false)
-- `use_skip_connection`: Add skip connections (default: true)
-- `reduce_learning_rate`: Reduce LR to 1e-4 (default: false)
-- `use_4_blocks`: Use 4 convolutional blocks (default: true)
-
-## Running the Pipeline
-
-### Full Pipeline
-Run all stages (data preparation, training, evaluation):
-```bash
+cd deep-learning-architecture-experiments
+dvc pull
 dvc repro
+dvc metrics show
 ```
 
-### Individual Stages
+## DVC Pipeline
 
-Prepare data only:
-```bash
-dvc repro prepare_data
+The pipeline is split into four reproducible stages:
+
+- `prepare_data` - download and preprocess CIFAR-10
+- `train_lenet`, `train_pintee_cnn`, `train_convnext_v1` - train each architecture
+- `evaluate_lenet`, `evaluate_pintee_cnn`, `evaluate_convnext_v1` - compute metrics for each run
+- `benchmark` - generate the comparison report in `reports/benchmark_report.md`
+
+## Project Layout
+
+```text
+src/                 training, evaluation, benchmarking, and data prep scripts
+src/architectures/   model definitions for the CNN experiments
+data/                raw and processed CIFAR-10 data managed by DVC
+experiments/         per-model checkpoints, logs, and metrics
+reports/             benchmark report and summary outputs
+dvc.yaml             end-to-end pipeline definition
+params.yaml          shared configuration for training and model variants
 ```
 
-Train model only:
-```bash
-dvc repro train
-```
+## Notes
 
-Evaluate model only:
-```bash
-dvc repro evaluate
-```
-
-### Run Python Scripts Directly
-```bash
-python src/data_prep.py      # Prepare CIFAR-10 data
-python src/train.py          # Train the model
-python src/evaluate.py       # Evaluate on test set
-```
-
-## Model Architecture
-
-The **PinteeCNN** model is a multi-block convolutional neural network designed for CIFAR-10 classification:
-
-- **Input:** 3×32×32 RGB images
-- **Blocks:** Multiple convolutional blocks with:
-  - 3×3 convolutions
-  - Optional batch normalization
-  - Max pooling operations
-  - Configurable activation functions (ReLU/SiLU/Sigmoid)
-  - Optional skip connections
-- **Output:** 10-class softmax predictions
-
-Architecture is configurable via `params.yaml` improvement flags.
-
-## Results
-
-- **Test Accuracy:** 74.27%
-- **Test Loss:** 1.433
-- **Best Training Accuracy:** 96.93% (at epoch 19)
-
-Results are saved to:
-- `metrics.json` - Final evaluation metrics
-- `training_logs.csv` - Per-epoch training history with loss and accuracy
-
-## Experiment Tracking with DVC
-
-DVC tracks:
-- **Dependencies:** Data files and source code changes
-- **Outputs:** Generated models and processed data
-- **Metrics:** Evaluation results
-- **Plots:** Training curves from `training_logs.csv`
-
-View pipeline DAG:
-```bash
-dvc dag
-```
-
-Check pipeline status:
-```bash
-dvc status
-```
-
-## Key Features
-
-- ✅ Reproducible ML pipeline with DVC
-- ✅ Configurable architecture and training parameters
-- ✅ Multiple improvement flags for architecture experimentation
-- ✅ Automatic metrics tracking and logging
-- ✅ GPU support (CUDA if available, otherwise CPU)
-- ✅ Training history logging to CSV for analysis
-- ✅ Clean modular code organization
-
-## Dependencies
-
-See `pyproject.toml` for complete dependency list:
-- `dvc` - Pipeline management
-- `torch` & `torchvision` - Deep learning framework
-- `numpy` - Numerical computing
-- `pyyaml` - Configuration parsing
-- `matplotlib` - Visualization
-
-## License
-
-[Add your license here]
+- Model behavior and hyperparameters are controlled through `params.yaml`.
+- All generated artifacts are managed by DVC, so the benchmark can be rebuilt from scratch on a clean checkout.
