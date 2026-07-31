@@ -106,4 +106,5 @@ stages:
       - experiments/pintee_cnn/metrics.json
       - experiments/convnext_v1/metrics.json
     outs:
-      - reports/benchmark_report.md
+      - reports/benchmark_report.md:
+          cache: false
