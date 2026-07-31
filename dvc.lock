@@ -355,8 +355,12 @@ stages:
       hash: md5
       md5: b5fd6b00ff9ec8abaeb9c669356b5cf3
       size: 428
+    - path: src/benchmark.py
+      hash: md5
+      md5: 6523440e9f516fcff111ced3c9e0f894
+      size: 5091
     outs:
     - path: reports/benchmark_report.md
       hash: md5
-      md5: e36186446bdfb8999663cd6fbc05d10b
-      size: 2580
+      md5: 908da5114c096cad5de9fd77db2ed9dc
+      size: 2641

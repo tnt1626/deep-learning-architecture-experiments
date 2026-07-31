@@ -102,6 +102,7 @@ stages:
   benchmark:
     cmd: python src/benchmark.py
     deps:
+      - src/benchmark.py
       - experiments/lenet/metrics.json
       - experiments/pintee_cnn/metrics.json
       - experiments/convnext_v1/metrics.json

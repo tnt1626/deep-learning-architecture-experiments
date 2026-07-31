@@ -1,6 +1,6 @@
 # CNN Benchmark Report — CIFAR-10
 
-*Generated: 2026-07-29 | Seed: 42 | Epochs: 20*
+*Generated: 2026-07-31 | Seed: 42 | Epochs: 20*
 
 ## Summary
 
@@ -99,7 +99,6 @@
 ## Conclusion
 
 - **Best accuracy:** convnext_v1 (86.34%)
-- **Best speed:** lenet (0.428ms) 
-- **Best trade-off:** pintee_cnn — 80.84% accuracy với inference 
-  nhanh hơn convnext 4× và chỉ 8.8M params
-- **Consistent weak spot:** `dog` và `cat` khó nhất với tất cả models
+- **Best inference speed:** lenet (0.428 ms)
+- **Best trade-off:** pintee_cnn achieved 80.84% accuracy while delivering 4× faster inference than convnext_v1 with only 8.8M parameters.
+- **Most challenging classes:** `dog` and `cat` were consistently the hardest to classify across all models.
